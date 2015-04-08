@@ -25,6 +25,9 @@ if (Meteor.isClient) {
       data: function(){
         // code goes here
         trailIdentifier = this.params.trailID;
+        if(typeof trailIdentifier === 'undefined') {
+          trailIdentifier = guid();
+        }
         console.log("Trail Route " + trailIdentifier);
         Session.set('trailID', trailIdentifier);
       }
@@ -72,7 +75,7 @@ if (Meteor.isClient) {
 
     "submit .generate-trail": function (event) {
       var status = Trails.findOne({'trailID':trailIdentifier});
-      if(typeof status === 'undefined'){
+      if(typeof status === ''){
         Trails.insert({
             name:"My Trail",
             trailID:trailIdentifier
@@ -101,6 +104,9 @@ if (Meteor.isClient) {
 
         Trails.update({_id:status._id},{ $set:{'name' : event.target.name.value}});
       }
+
+alert(trailIdentifier);
+      Router.go('trail', {"trailID":trailIdentifier});
 
         return false;
     }
