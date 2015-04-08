@@ -1,0 +1,47 @@
+<!-- simple-todos.html -->
+<head>
+  <title>Hike At Home Trail Builder</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Hike At Home Trail Builder</h1>
+      {{#each trail}}
+      {{> trailname}}
+      {{/each}}
+
+      <form class="save-trailname">
+        <input type="text" name="name" placeholder="Trail Name" />
+        <button type="submit">Save Name</button>
+      </form>
+
+      <form class="new-landmark">
+        <input type="text" name="landmarkName" placeholder="Landmark" />
+        <input type="text" name="distance" placeholder="Distance (miles)" />
+        <button type="submit">Add Landmark</button>
+      </form>
+      <form class="generate-trail">
+        <button type="submit">Generate Trail</button>
+      </form>
+    </header>
+
+    <ul>
+      {{#each landmarks}}
+      {{> landmark}}
+      {{/each}}
+    </ul>
+  </div>
+</body>
+
+<template name="landmark">
+  <li>{{name}} {{distance}}</li>
+</template>
+
+<template name="trailname">
+  <h2>{{name}}</h2>
+</template>
+
+<template name="hello">
+  This is the home template.
+</template>
