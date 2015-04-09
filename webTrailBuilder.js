@@ -19,7 +19,14 @@ function guid() {
 
 if (Meteor.isClient) {
   Router.map(function(){
-    this.route('home', {path: '/'} );
+    this.route('home', {
+      path: '/',
+      data: function() {
+        trailIdentifier = guid();
+        Session.set('trailID', trailIdentifier);
+      }
+    } );
+
     this.route('trail', {
       path: '/trail/:trailID',
       data: function(){
@@ -85,6 +92,10 @@ if (Meteor.isClient) {
       var trailJSON = {};
       var trail = Trails.findOne({'trailID':trailIdentifier});
       trailJSON["name"] = trail.name;
+
+      var landmarks = Landmarks.find({'trailID':trailIdentifier},{'fields':{'_id':0, 'name':1, 'distance':1}}).fetch();
+      trailJSON["landmarks"] = landmarks;
+
       alert(JSON.stringify(trailJSON));
 
       return false;
@@ -92,10 +103,11 @@ if (Meteor.isClient) {
     },
 
     "submit .save-trailname" : function (event) {
+
       var status = Trails.findOne({'trailID':trailIdentifier});
       if(typeof status === 'undefined'){
         Trails.insert({
-          name:"My Trail",
+          name:event.target.name.value,
           trailID:trailIdentifier
         });
       }
@@ -105,7 +117,6 @@ if (Meteor.isClient) {
         Trails.update({_id:status._id},{ $set:{'name' : event.target.name.value}});
       }
 
-alert(trailIdentifier);
       Router.go('trail', {"trailID":trailIdentifier});
 
         return false;
