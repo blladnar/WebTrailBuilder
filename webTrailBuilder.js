@@ -89,14 +89,7 @@ if (Meteor.isClient) {
           });
       }
 
-      var trailJSON = {};
-      var trail = Trails.findOne({'trailID':trailIdentifier});
-      trailJSON["name"] = trail.name;
-
-      var landmarks = Landmarks.find({'trailID':trailIdentifier},{'fields':{'_id':0, 'name':1, 'distance':1}}).fetch();
-      trailJSON["landmarks"] = landmarks;
-
-      alert(JSON.stringify(trailJSON));
+      alert(generateTrailJSONWithTrailID(trailIdentifier));
 
       return false;
 
@@ -124,4 +117,30 @@ if (Meteor.isClient) {
 
   });
 
+}
+
+function generateTrailJSONWithTrailID(trailID) {
+  var trailJSON = {};
+  var trail = Trails.findOne({'trailID':trailID});
+  trailJSON["name"] = trail.name;
+
+  var landmarks = Landmarks.find({'trailID':trailID},{'fields':{'_id':0, 'name':1, 'distance':1}}).fetch();
+  trailJSON["landmarks"] = landmarks;
+
+  return JSON.stringify(trailJSON, null, 2);
+}
+
+if(Meteor.isServer) {
+
+  Router.map(function(){
+
+    this.route('serverRoute', {
+      where: 'server',
+      path: '/trail/:trailID.:format',
+      action: function() {
+        this.response.writeHead(200, {'Content-Type': 'application/json'});
+        this.response.end(generateTrailJSONWithTrailID(this.params.trailID));
+      }
+    });
+  });
 }
