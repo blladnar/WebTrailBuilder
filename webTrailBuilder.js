@@ -17,6 +17,11 @@ function guid() {
   s4() + s4() + s4() + s4();
 }
 
+Router.configure({
+  // we use the  appBody template to define the layout for the entire app
+  layoutTemplate: 'appBody'
+});
+
 if (Meteor.isClient) {
   Router.map(function(){
     this.route('home', {
@@ -24,10 +29,15 @@ if (Meteor.isClient) {
       data: function() {
         trailIdentifier = guid();
         Session.set('trailID', trailIdentifier);
+      },
+      action: function() {
+        Router.go('trailbuilder', Trails.findOne());
       }
     } );
 
-    this.route('trail', {
+
+
+    this.route('trailbuilder', {
       path: '/trail/:trailID',
       data: function(){
         // code goes here
@@ -40,10 +50,14 @@ if (Meteor.isClient) {
       }
     });
 
+    this.route('trailList', {
+      path: 'trails'
+    });
+
   });
 
 
-  Template.body.helpers({
+  Template.trailbuilder.helpers({
     landmarks: function () {
       return Landmarks.find({'trailID':Session.get('trailID')});
     },
@@ -57,7 +71,7 @@ if (Meteor.isClient) {
 
 
 
-  Template.body.events({
+  Template.trailbuilder.events({
     "submit .new-landmark": function (event) {
       // This function is called when the new task form is submitted
 
@@ -110,7 +124,7 @@ if (Meteor.isClient) {
         Trails.update({_id:status._id},{ $set:{'name' : event.target.name.value}});
       }
 
-      Router.go('trail', {"trailID":trailIdentifier});
+      Router.go('trailbuilder', {"trailID":trailIdentifier});
 
         return false;
     }

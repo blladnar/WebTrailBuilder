@@ -3,10 +3,20 @@
   <title>Hike At Home Trail Builder</title>
 </head>
 
-<body>
+<template name="appBody">
   <div class="container">
     <header>
       <h1>Hike At Home Trail Builder</h1>
+    </header>
+    <div id="content-container">
+    {{> yield}}
+    </div>
+
+  </div>
+</template>
+
+<template name="trailbuilder">
+  <div class="container">
       {{#each trail}}
       {{> trailname}}
       {{/each}}
@@ -21,10 +31,10 @@
         <input type="text" name="distance" placeholder="Distance (miles)" />
         <button type="submit">Add Landmark</button>
       </form>
+
       <form class="generate-trail">
         <button type="submit">Generate Trail</button>
       </form>
-    </header>
 
     <ul>
       {{#each landmarks}}
@@ -32,7 +42,7 @@
       {{/each}}
     </ul>
   </div>
-</body>
+</template>
 
 <template name="landmark">
   <li>{{name}} {{distance}}</li>
@@ -44,3 +54,5 @@
 
 <template name="trail"></template>
 <template name="home"></template>
+
+<template name="trailList">Hello</template>
