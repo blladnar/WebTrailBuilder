@@ -24,7 +24,9 @@ if (Meteor.isClient) {
       }
     } );
 
-
+    this.route('trailList', {
+      path: 'trails'
+    });
 
     this.route('trailbuilder', {
       path: '/trail/:trailID',
@@ -34,14 +36,29 @@ if (Meteor.isClient) {
         if(typeof trailIdentifier === 'undefined') {
           trailIdentifier = guid();
         }
-        console.log("Trail Route " + trailIdentifier);
         Session.set('trailID', trailIdentifier);
       }
     });
 
-    this.route('trailList', {
-      path: 'trails'
+    this.route('newTrail', {
+      path:'new',
+      data: function(){
+        // code goes here
+        trailIdentifier = this.params.trailID;
+        if(typeof trailIdentifier === 'undefined') {
+          trailIdentifier = guid();
+        }
+        Session.set('trailID', trailIdentifier);
+      }
     });
+
+    // this.route('trailbuilder', {
+    //   path:'/new',
+    //   data:function() {
+    //     trailIdentifier = guid();
+    //     Session.set('trailID', trailIdentifier);
+    //   }
+    // });
 
   });
 }

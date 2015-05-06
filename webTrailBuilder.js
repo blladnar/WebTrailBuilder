@@ -8,6 +8,12 @@ function isEmpty(str) {
 }
 
 if(Meteor.isClient) {
+  Template.newTrail.helpers({
+    autoredirect: function () {
+      Router.go('trailbuilder', {"trailID":Session.get('trailID')});
+      return null;
+    }
+  })
   Template.trailbuilder.helpers({
     landmarks: function () {
       return Landmarks.find({'trailID':Session.get('trailID')});
@@ -29,7 +35,7 @@ if(Meteor.isClient) {
       Landmarks.insert({
         name: name,
         distance: distance,
-        trailID: trailIdentifier,
+        trailID: Session.get('trailID'),
         createdAt: new Date() // current time
       });
 
