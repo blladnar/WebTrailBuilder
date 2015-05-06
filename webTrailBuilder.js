@@ -7,56 +7,7 @@ function isEmpty(str) {
   return (!str || 0 === str.length);
 }
 
-function guid() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-    .toString(16)
-    .substring(1);
-  }
-  return s4() + s4() + s4() + s4() +
-  s4() + s4() + s4() + s4();
-}
-
-Router.configure({
-  // we use the  appBody template to define the layout for the entire app
-  layoutTemplate: 'appBody'
-});
-
-if (Meteor.isClient) {
-  Router.map(function(){
-    this.route('home', {
-      path: '/',
-      data: function() {
-        trailIdentifier = guid();
-        Session.set('trailID', trailIdentifier);
-      },
-      action: function() {
-        Router.go('trailbuilder', Trails.findOne());
-      }
-    } );
-
-
-
-    this.route('trailbuilder', {
-      path: '/trail/:trailID',
-      data: function(){
-        // code goes here
-        trailIdentifier = this.params.trailID;
-        if(typeof trailIdentifier === 'undefined') {
-          trailIdentifier = guid();
-        }
-        console.log("Trail Route " + trailIdentifier);
-        Session.set('trailID', trailIdentifier);
-      }
-    });
-
-    this.route('trailList', {
-      path: 'trails'
-    });
-
-  });
-
-
+if(Meteor.isClient) {
   Template.trailbuilder.helpers({
     landmarks: function () {
       return Landmarks.find({'trailID':Session.get('trailID')});
@@ -66,9 +17,6 @@ if (Meteor.isClient) {
     }
 
   });
-
-
-
 
 
   Template.trailbuilder.events({
@@ -110,6 +58,7 @@ if (Meteor.isClient) {
     },
 
     "submit .save-trailname" : function (event) {
+      trailIdentifier = Session.get('trailID');
 
       var status = Trails.findOne({'trailID':trailIdentifier});
       if(typeof status === 'undefined'){
@@ -156,5 +105,15 @@ if(Meteor.isServer) {
         this.response.end(generateTrailJSONWithTrailID(this.params.trailID));
       }
     });
+
+    this.route('serverTrails', {
+      where: 'server2',
+      path:'/trails.:format',
+      action: function() {
+        this.response.writeHead(200, {'Content-Type': 'application/json'});
+        this.response.end(generateTrailJSONWithTrailID(this.params.trailID));
+      }
+    })
+
   });
 }

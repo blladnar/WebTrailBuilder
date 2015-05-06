@@ -1,0 +1,11 @@
+<template name="trailList">
+  <ul>
+  {{#each trail}}
+  {{> trailLink}}
+  {{/each}}
+  </ul>
+</template>
+
+<template name="trailLink">
+  <li><a href="/trail/{{trailID}}">{{name}}</a></li>
+</template>
