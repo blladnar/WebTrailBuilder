@@ -82,7 +82,7 @@ if(Meteor.isClient) {
       Router.go('trailbuilder', {"trailID":trailIdentifier});
 
         return false;
-    }
+    },
 
   });
 
